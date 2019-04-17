@@ -4,21 +4,21 @@ import java.util.Date;
 
 public class Movie {
     String name,regisseur, leadingActor, supportingActor,genre;
-    Date launchDate;
+    int year;
     int movieLength;
-    public Movie(String name, String regisseur, String leadingActor, String supportingActor, Date launchDate, int movieLength, String genre) {
+    public Movie(String name, String regisseur, String leadingActor, String supportingActor, int year, int movieLength, String genre) {
         this.name = name;
         this.regisseur = regisseur;
         this.leadingActor = leadingActor;
         this.supportingActor = supportingActor;
-        this.launchDate = launchDate;
+        this.year = year;
         this.movieLength=movieLength;
         this.genre=genre;
     }
 
     @Override
     public String toString() {
-        return name + "\n" +"Regie: " +regisseur+"\n "+"Actors "+leadingActor+", "+supportingActor+"\n"+"Launchdate: "+launchDate+"\n"+movieLength+" min";
+        return name + "\n" +"Regie: " +regisseur+"\n"+"Actors "+leadingActor+", "+supportingActor+"\n"+"Year: "+year+"\n"+movieLength+" min";
 
     }
 }

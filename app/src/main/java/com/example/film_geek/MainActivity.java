@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,41 +28,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-              mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_main);
         button = findViewById(R.id.button);
         emailText = findViewById(R.id.emailText);
         passwordText = findViewById(R.id.passwordText);
 
 
-        register(emailText.getText().toString(), passwordText.getText().toString());
-        Intent i = new Intent(MainActivity.this, MovieListActivity.class);
-        startActivity(i);
+       button.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+             String   email =emailText.getText().toString();
+              String password = passwordText.getText().toString();
+            register(email, password);
+
+           }
+       });
+
     }
 
-    public void register(String email, String password) {
-        final String TAG = "Method: register";
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+public void register(String email, String password){
+    mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+
+                        Log.d("Register ", "createUserWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        Intent i = new Intent(MainActivity.this, MovieListActivity.class);
+                        startActivity(i);
+
+                    } else {
+
+                        Log.w("Register", "createUserWithEmail:failure", task.getException());
 
 
-                        }
-
-                        // ...
                     }
-                });
-
-    }
-
+                }
+            });
+}
 
 }

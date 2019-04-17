@@ -30,10 +30,11 @@
 
         <Button
             android:id="@+id/button"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.05"
-            android:text="Button" />
+            android:text="Register or SignIn" />
 
     </LinearLayout>
 
