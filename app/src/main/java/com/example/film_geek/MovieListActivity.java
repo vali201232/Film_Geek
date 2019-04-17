@@ -1,9 +1,12 @@
 package com.example.film_geek;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -40,6 +43,14 @@ public class MovieListActivity extends AppCompatActivity {
         listView.setAdapter(listAdapter);
 
         readData();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MovieListActivity.this, OnClickActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 public void readData(){
