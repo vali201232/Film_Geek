@@ -11,11 +11,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -35,39 +41,62 @@ public class MainActivity extends AppCompatActivity {
         passwordText = findViewById(R.id.passwordText);
 
 
-       button.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-             String   email =emailText.getText().toString();
-              String password = passwordText.getText().toString();
-            register(email, password);
-
-           }
-       });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = emailText.getText().toString();
+                String password = passwordText.getText().toString();
+                register(email, password);
+                addData(email, password);
+            }
+        });
 
     }
 
 
-public void register(String email, String password){
-    mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
+    public void register(String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
 
-                        Log.d("Register ", "createUserWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Intent i = new Intent(MainActivity.this, MovieListActivity.class);
-                        startActivity(i);
+                            Log.d("Register ", "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Intent i = new Intent(MainActivity.this, MovieListActivity.class);
+                            startActivity(i);
 
-                    } else {
+                        } else {
 
-                        Log.w("Register", "createUserWithEmail:failure", task.getException());
+                            Log.w("Register", "createUserWithEmail:failure", task.getException());
 
 
+                        }
                     }
-                }
-            });
-}
+                });
+    }
 
+    public void addData(String email, String password) {
+        final String TAG = "addData";
+
+        // Create a new user with a first and last name
+        Map<String, String> user = new HashMap<>();
+        user.put(email, password);
+
+// Add a new document with a generated ID
+        db.collection("user")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
 }
