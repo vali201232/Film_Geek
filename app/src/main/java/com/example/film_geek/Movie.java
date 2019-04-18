@@ -1,8 +1,9 @@
 package com.example.film_geek;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Movie {
+public class Movie implements Serializable {
     String name,regisseur, leadingActor, genre, language, country;
     String year, movieLength;
 

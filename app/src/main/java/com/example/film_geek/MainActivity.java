@@ -79,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
     public void addData(String email, String password) {
         final String TAG = "addData";
 
-        // Create a new user with a first and last name
+
         Map<String, String> user = new HashMap<>();
         user.put(email, password);
 
-// Add a new document with a generated ID
+
         db.collection("user")
                 .add(user)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

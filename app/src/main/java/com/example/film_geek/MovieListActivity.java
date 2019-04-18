@@ -18,6 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class MovieListActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         listView = findViewById(R.id.listView);
         movieList = new ArrayList<>();
-        Movie testMovie = new Movie("The Wolf of Wall Street", "Martin Scorsese", "Leonardo DiCaprio",
+        final Movie testMovie = new Movie("The Wolf of Wall Street", "Martin Scorsese", "Leonardo DiCaprio",
                 "Comedy", "English", "United States of America", "2013", "180");
         movieList.add(testMovie);
 
@@ -47,30 +49,38 @@ public class MovieListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MovieListActivity.this, OnClickActivity.class);
+
+                Movie movie= (Movie) adapterView.getItemAtPosition(i);
+                intent.putExtra("movieObject", movie);
                 startActivity(intent);
+
+
             }
         });
 
     }
 
-public void readData(){
-        final String TAG="readData";
-    db.collection("movie")
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            movieList.add(document.toObject(Movie.class));
+    public void readData() {
+        final String TAG = "readData";
+        db.collection("movie")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                movieList.add(document.toObject(Movie.class));
 
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
                         }
-                    } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
+                        listAdapter.notifyDataSetChanged();
                     }
-                    listAdapter.notifyDataSetChanged();
-                }
-            });
-}
+                });
+    }
+
+
+
 }
