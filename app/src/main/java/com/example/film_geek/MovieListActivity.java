@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,9 +38,9 @@ public class MovieListActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         listView = findViewById(R.id.listView);
         movieList = new ArrayList<>();
-        final Movie testMovie = new Movie("The Wolf of Wall Street", "Martin Scorsese", "Leonardo DiCaprio",
-                "Comedy", "English", "United States of America", "2013", "180");
-        movieList.add(testMovie);
+//        final Movie testMovie = new Movie("The Wolf of Wall Street", "Martin Scorsese", "Leonardo DiCaprio",
+//                "Comedy", "English", "United States of America", "2013", "180");
+//        movieList.add(testMovie);
 
         listAdapter = new ArrayAdapter<Movie>(this, android.R.layout.simple_list_item_1, movieList);
         listView.setAdapter(listAdapter);
@@ -57,7 +58,18 @@ public class MovieListActivity extends AppCompatActivity {
 
             }
         });
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
 
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    listAdapter.getFilter().filter(s);
+                    return false;
+                }
+            });
     }
 
     public void readData() {

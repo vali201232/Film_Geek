@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
         emailText = findViewById(R.id.emailText);
         passwordText = findViewById(R.id.passwordText);
 
+        Intent i = new Intent(MainActivity.this, MovieListActivity.class);
+        startActivity(i);
+
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
