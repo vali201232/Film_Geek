@@ -11,23 +11,32 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <SearchView
+            android:id="@+id/searchViewMovies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.05" />
+
         <ListView
             android:id="@+id/listViewFriends"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:footerDividersEnabled="true" />
+            android:footerDividersEnabled="true"
+            android:scrollbars="vertical" />
 
         <ListView
             android:id="@+id/selectedFriends"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5" />
+            android:layout_weight="1"
+            android:headerDividersEnabled="true"
+            android:scrollbars="vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button

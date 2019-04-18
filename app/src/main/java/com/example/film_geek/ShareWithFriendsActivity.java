@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,7 +34,7 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
    List<Friend> friendList;
    List<Friend> listSelectedFriends;
     ListView selectedFriends;
-
+    SearchView searchViewMovies;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +46,7 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
         selectedFriends = findViewById(R.id.selectedFriends);
         friendList = new ArrayList<>();
         listSelectedFriends = new ArrayList<>();
+        searchViewMovies = findViewById(R.id.searchViewMovies);
 
 
         //friendList.add("Valentin Kellermair");
@@ -58,6 +60,18 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        searchViewMovies.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                listAdapter.getFilter().filter(s);
+                return false;
             }
         });
         listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -102,7 +116,12 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("Read Data share", document.getId() + " => " + document.getData());
-                            friendList.add(document.toObject(Friend.class));
+                                Friend friend = new Friend();
+                                String string =document.getData().toString().replace('{', ' ');
+
+                                 String[] stringarr = string.split("=");
+                                friend.setName(stringarr[0]);
+                            friendList.add(friend);
                             }
                         } else {
                             Log.w("Read Data share", "Error getting documents.", task.getException());
