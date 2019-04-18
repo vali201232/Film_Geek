@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Map<String, String> user = new HashMap<>();
-        user.put(email, password);
+        user.put("email" ,email);
 
 
         db.collection("user")
