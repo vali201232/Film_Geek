@@ -18,14 +18,19 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShareWithFriendsActivity extends AppCompatActivity {
     FirebaseFirestore db;
@@ -34,16 +39,20 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
     Button backButton;
     ArrayAdapter<Friend> listAdapter;
     ArrayAdapter<Friend> selectedFriendsAdapter;
-   List<Friend> friendList;
-   List<Friend> listSelectedFriends;
+    List<Friend> friendList;
+    List<Friend> listSelectedFriends;
     ListView selectedFriends;
     SearchView searchViewMovies;
     List<Friend> sendingList;
+
+    Movie movie;
+    String movieName = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_with_friends);
-         db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         shareButton = findViewById(R.id.shareButton);
         listViewFriends = findViewById(R.id.listViewFriends);
         backButton = findViewById(R.id.backButton);
@@ -102,21 +111,22 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
         });
 
 
-
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String string="";
-                String friendsString="";
+
+
+                String string = "";
+                String friendsString = "";
 
                 for (int i = 0; i < listSelectedFriends.size(); i++) {
-                   sendingList.add(listSelectedFriends.get(i));
+                    sendingList.add(listSelectedFriends.get(i));
                 }
                 for (int i = 0; i < sendingList.size(); i++) {
-                    string =string+ sendingList.get(i).getName().toString();
+                    string = string + sendingList.get(i).getName().toString();
 
                 }
-                friendsString=friendsString+string+"\n";
+                friendsString = friendsString + string + "\n";
                 new AlertDialog.Builder(ShareWithFriendsActivity.this)
                         .setTitle("Do you wanna share this Movie with your Friends")
                         .setMessage(string)
@@ -126,7 +136,27 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-                                //Connect with DB
+
+                                // Create a new user with a first and last name
+                                List<Recommendation> recList = new ArrayList<>();
+
+
+                                // Add a new document with a generated ID
+                                db.collection("recommendation")
+                                        .add(recList)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Log.d("shareWithFriends", "DocumentSnapshot added with ID: " + documentReference.getId());
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("shareWithFriends", "Error adding document", e);
+                                            }
+                                        });
+
 
                             }
                         })
@@ -142,7 +172,7 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
 
     }
 
-    public void readData(){
+    public void readData() {
         db.collection("user")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -152,11 +182,11 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("Read Data share", document.getId() + " => " + document.getData());
                                 Friend friend = new Friend();
-                                String string =document.getData().toString().replace('{', ' ');
+                                String string = document.getData().toString().replace('{', ' ');
 
-                                 String[] stringarr = string.split("=");
-                                friend.setName(stringarr[0]);
-                            friendList.add(friend);
+
+                                friend.setName(string);
+                                friendList.add(friend);
                             }
                         } else {
                             Log.w("Read Data share", "Error getting documents.", task.getException());
@@ -167,5 +197,6 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
 
 
     }
+
 
 }

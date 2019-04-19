@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         emailText = findViewById(R.id.emailText);
         passwordText = findViewById(R.id.passwordText);
 
-        Intent i = new Intent(MainActivity.this, MovieListActivity.class);
-        startActivity(i);
+        //Intent i = new Intent(MainActivity.this, MovieListActivity.class);
+        //startActivity(i);
 
 
 
@@ -57,6 +57,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        FirebaseUser fbu = mAuth.getCurrentUser();
+        if(fbu!=null){
+            Intent i = new Intent(MainActivity.this, MovieListActivity.class);
+            startActivity(i);
+        }
+    }
 
     public void register(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)

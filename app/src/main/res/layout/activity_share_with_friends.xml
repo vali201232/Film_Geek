@@ -21,7 +21,7 @@
             android:id="@+id/listViewFriends"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="0.75"
             android:footerDividersEnabled="true"
             android:scrollbars="vertical" />
 
@@ -29,14 +29,14 @@
             android:id="@+id/selectedFriends"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.05"
             android:headerDividersEnabled="true"
             android:scrollbars="vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.08"
             android:orientation="horizontal">
 
             <Button
