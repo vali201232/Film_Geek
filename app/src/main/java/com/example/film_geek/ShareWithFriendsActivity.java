@@ -1,6 +1,9 @@
 package com.example.film_geek;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,6 +38,7 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
    List<Friend> listSelectedFriends;
     ListView selectedFriends;
     SearchView searchViewMovies;
+    List<Friend> sendingList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,7 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
         friendList = new ArrayList<>();
         listSelectedFriends = new ArrayList<>();
         searchViewMovies = findViewById(R.id.searchViewMovies);
+        sendingList = new ArrayList<>();
 
 
         //friendList.add("Valentin Kellermair");
@@ -101,6 +106,36 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String string="";
+                String friendsString="";
+
+                for (int i = 0; i < listSelectedFriends.size(); i++) {
+                   sendingList.add(listSelectedFriends.get(i));
+                }
+                for (int i = 0; i < sendingList.size(); i++) {
+                    string =string+ sendingList.get(i).getName().toString();
+
+                }
+                friendsString=friendsString+string+"\n";
+                new AlertDialog.Builder(ShareWithFriendsActivity.this)
+                        .setTitle("Do you wanna share this Movie with your Friends")
+                        .setMessage(string)
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                //Connect with DB
+
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.star_big_on)
+                        .show();
+
 
             }
         });
@@ -132,4 +167,5 @@ public class ShareWithFriendsActivity extends AppCompatActivity {
 
 
     }
+
 }
